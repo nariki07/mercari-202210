@@ -18,25 +18,23 @@ import com.example.demo.repository.OriginalRepository;
 @Controller
 @RequestMapping("/")
 public class InsertOriginalController {
-	
+
 	@Autowired
 	private OriginalRepository originalRepository;
-	
+
 	@GetMapping("insert")
 	public String insert() {
-		try {
+		List<String[]> dataList = new ArrayList<>();
 
-			List<String[]> dataList = new ArrayList<>();
+		// ファイルのパスを代入.
+		String train_tsv = "src/main/resources/files/train.tsv";
 
-			// ファイルのパスを代入.
-			String train_tsv = "src/main/resources/files/train.tsv";
-
-			// ファイルのパスを引数で渡してファイルオブジェクトをインスタンス化.
-			File f = new File(train_tsv);
+		// ファイルのパスを引数で渡してファイルオブジェクトをインスタンス化.
+		File f = new File(train_tsv);
+		try (BufferedReader br = new BufferedReader(new FileReader(f));) {
 
 			// ファイルオブジェクトを引数に渡してFileReaderをインスタンス化.
 			// さらにBufferedReaderの引数にFileReaderを渡してインスタンス化.
-			BufferedReader br = new BufferedReader(new FileReader(f));
 
 			String line;
 			// 1行ずつCSVファイルを読み込む
@@ -99,13 +97,11 @@ public class InsertOriginalController {
 				originalRepository.insert(original);
 
 			}
-			// リソースの解放.
-			br.close();
 		} catch (IOException e) {
 			System.out.println(e);
 		}
-		
+
 		return "finish";
 	}
-	
+
 }

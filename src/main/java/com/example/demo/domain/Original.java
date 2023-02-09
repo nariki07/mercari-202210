@@ -7,7 +7,7 @@ package com.example.demo.domain;
  *
  */
 public class Original {
-	
+
 	/* ID */
 	private Integer id;
 	/* 商品名 */
