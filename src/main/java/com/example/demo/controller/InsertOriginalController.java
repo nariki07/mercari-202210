@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.demo.domain.Original;
 import com.example.demo.repository.OriginalRepository;
 
+@Component
 @Controller
 @RequestMapping("/")
 public class InsertOriginalController {
@@ -24,6 +27,7 @@ public class InsertOriginalController {
 
 	@GetMapping("insert")
 	public String insert() {
+
 		List<String[]> dataList = new ArrayList<>();
 
 		// ファイルのパスを代入.
@@ -32,34 +36,16 @@ public class InsertOriginalController {
 		// ファイルのパスを引数で渡してファイルオブジェクトをインスタンス化.
 		File f = new File(train_tsv);
 		try (BufferedReader br = new BufferedReader(new FileReader(f));) {
-
-			// ファイルオブジェクトを引数に渡してFileReaderをインスタンス化.
-			// さらにBufferedReaderの引数にFileReaderを渡してインスタンス化.
-
 			String line;
-			// 1行ずつCSVファイルを読み込む
 
-			// 指定した行数分だけ読み込むためのfor文.
-			for (int i = 0; i <= 1482534; i++) {
-				line = br.readLine();
-				String[] data = line.split("\t", 0);
+			while ((line = br.readLine()) != null) {
+				String[] data = line.split("\t", 0); // １行分をタブ区切りで配列に変換.
 				dataList.add(data);
 			}
 
-			/*
-			 * 全件読み込むwhile文. while ((line = br.readLine()) != null) { String[] data =
-			 * line.split("\t", 0); // １行分をタブ区切りで配列に変換.
-			 * 
-			 * for (int i = 0; i <= 7; i++) { System.out.println(data[i]); }
-			 * dataList.add(data);
-			 * 
-			 * }
-			 */
-
 			Original original = new Original();
 
-			// 指定した行数分だけ挿入するためのfor文.
-			for (int i = 1264242; i <= 1482534; i++) {
+			for (int i = 0; i < dataList.size(); i++) {
 
 				String[] data = dataList.get(i);
 

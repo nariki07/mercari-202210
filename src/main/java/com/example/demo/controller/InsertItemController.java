@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,7 @@ import com.example.demo.domain.Item;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ItemRepository;
 
+@Component
 @Controller
 @RequestMapping("/item")
 public class InsertItemController {
@@ -41,15 +44,13 @@ public class InsertItemController {
 			String line;
 			// 1行ずつCSVファイルを読み込む
 
-			// 指定した行数分だけ読み込むためのfor文.
-			for (int i = 0; i <= 1482534; i++) {
-				line = br.readLine();
-				String[] data = line.split("\t", 0);
+			while ((line = br.readLine()) != null) {
+				String[] data = line.split("\t", 0); // １行分をタブ区切りで配列に変換.
 				dataList.add(data);
 			}
 
 			// 指定した行数分だけ挿入するためのfor文.
-			for (int i = 0; i <= 1482534; i++) {
+			for (int i = 0; i < 1482534; i++) {
 				String[] data = dataList.get(i);
 				// categoryドメインに値をセットする. 例) dataList[0]のdata[3] = Men/Tops/T-shirts.
 				String[] category2 = data[3].split("/", 0);
@@ -74,15 +75,21 @@ public class InsertItemController {
 					Item item = new Item();
 					item.setName(data[1]);
 					item.setConditionId(Integer.parseInt(data[2]));
-					item.setCategory(smallCategory.getId());
+					if (smallCategory != null) {
+						item.setCategory(smallCategory.getId());
+					} else {
+						item.setCategory(null);
+					}
 					item.setBrand(data[4]);
 					item.setPrice(Double.parseDouble(data[5]));
 					item.setShipping(Integer.parseInt(data[6]));
 					item.setDescription(data[7]);
 					itemRepository.insert(item);
 				}
-
+				
+				
 			}
+
 		} catch (
 
 		IOException e) {
