@@ -32,21 +32,12 @@ public class InsertCategoryController {
 
 	@GetMapping("/insert")
 	public String insert() {
-
-		try {
-
-			List<String[]> dataList = new ArrayList<>();
-
-			// ファイルのパスを代入.
-			String train_tsv = "/Users/moriharanariki/Downloads/train.tsv";
-
-			// ファイルのパスを引数で渡してファイルオブジェクトをインスタンス化.
-			File f = new File(train_tsv);
-
-			// ファイルオブジェクトを引数に渡してFileReaderをインスタンス化.
-			// さらにBufferedReaderの引数にFileReaderを渡してインスタンス化.
-			BufferedReader br = new BufferedReader(new FileReader(f));
-
+		List<String[]> dataList = new ArrayList<>();
+		// ファイルのパスを代入.
+		String train_tsv = "src/main/resources/files/train.tsv";
+		// ファイルのパスを引数で渡してファイルオブジェクトをインスタンス化.
+		File f = new File(train_tsv);
+		try (BufferedReader br = new BufferedReader(new FileReader(f))) {
 			String line;
 			// 1行ずつCSVファイルを読み込む
 
@@ -165,9 +156,8 @@ public class InsertCategoryController {
 				}
 
 			}
-
-			// リソースの解放.
-			br.close();
+			// リソースの解放.try-with-resouces利用したため不必要.
+//			br.close();
 		} catch (
 
 		IOException e) {
