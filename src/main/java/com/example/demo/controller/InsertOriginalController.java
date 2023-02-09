@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,22 +17,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.demo.domain.Original;
 import com.example.demo.repository.OriginalRepository;
 
+@Component
 @Controller
 @RequestMapping("/")
 public class InsertOriginalController {
-	
+
 	@Autowired
 	private OriginalRepository originalRepository;
-	
+
 	@GetMapping("insert")
 	public String insert() {
 		try {
-
 			List<String[]> dataList = new ArrayList<>();
 
 			// ファイルのパスを代入.
-			String train_tsv = "src/main/resources/files/train.tsv";
-
+			String train_tsv = "/Users/moriharanariki/Downloads/train.tsv";
 			// ファイルのパスを引数で渡してファイルオブジェクトをインスタンス化.
 			File f = new File(train_tsv);
 
@@ -39,29 +40,15 @@ public class InsertOriginalController {
 			BufferedReader br = new BufferedReader(new FileReader(f));
 
 			String line;
-			// 1行ずつCSVファイルを読み込む
 
-			// 指定した行数分だけ読み込むためのfor文.
-			for (int i = 0; i <= 1482534; i++) {
-				line = br.readLine();
-				String[] data = line.split("\t", 0);
+			while ((line = br.readLine()) != null) {
+				String[] data = line.split("\t", 0); // １行分をタブ区切りで配列に変換.
 				dataList.add(data);
 			}
 
-			/*
-			 * 全件読み込むwhile文. while ((line = br.readLine()) != null) { String[] data =
-			 * line.split("\t", 0); // １行分をタブ区切りで配列に変換.
-			 * 
-			 * for (int i = 0; i <= 7; i++) { System.out.println(data[i]); }
-			 * dataList.add(data);
-			 * 
-			 * }
-			 */
-
 			Original original = new Original();
 
-			// 指定した行数分だけ挿入するためのfor文.
-			for (int i = 1264242; i <= 1482534; i++) {
+			for (int i = 0; i < dataList.size(); i++) {
 
 				String[] data = dataList.get(i);
 
@@ -104,8 +91,8 @@ public class InsertOriginalController {
 		} catch (IOException e) {
 			System.out.println(e);
 		}
-		
+
 		return "finish";
 	}
-	
+
 }

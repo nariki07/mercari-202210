@@ -93,8 +93,11 @@ public class CategoryRepository {
 	public Category findByNameAll(String nameAll) {
 		String sql = "SELECT id,parent,name,name_all FROM category WHERE name_all = :nameAll AND parent IS NOT NULL AND name_all IS NOT NULL;";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("nameAll", nameAll);
-		Category category = template.queryForObject(sql, param, CATEGORY_ROW_MAPPER);
-		return category;
+		List<Category> categoryList = template.query(sql, param, CATEGORY_ROW_MAPPER);
+		if (categoryList.size() == 0) {
+			return null;
+		}
+		return categoryList.get(0);
 	}
 
 	public List<Category> allFindByNameSmallCategory(String categoryName) {
